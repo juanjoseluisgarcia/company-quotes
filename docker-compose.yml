@@ -29,5 +29,14 @@ services:
       - postgres
     environment:
       ASPNETCORE_ENVIRONMENT: Docker
+      
+  web:
+    build:
+      context: ./web
+      dockerfile: web.dockerfile
+    ports:
+      - "80:80"
+    networks:
+      - glasslewis
 volumes:
   postgress-volume:

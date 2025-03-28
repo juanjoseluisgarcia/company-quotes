@@ -85,11 +85,20 @@
 
     builder.Services.AddSingleton<ICompanyRepositoryFactory, CompanyRepositoryFactory>();
 
+    builder.Services.AddCors(options =>
+    {
+        options.AddPolicy("AllowAll", policy =>
+        {
+            policy
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+    });
+
     var app = builder.Build();
 
-    Console.WriteLine("ENV: " + builder.Environment.EnvironmentName);
-
-    Console.WriteLine("Connection string: " + builder.Configuration.GetConnectionString("DefaultConnection"));
+    app.UseCors("AllowAll");
 
     app.UseSwagger();
 
@@ -126,7 +135,12 @@
         var jwt = tokenHandler.WriteToken(token);
 
         return Results.Ok(new { token = jwt });
-    });
+    }).WithOpenApi(operation => new OpenApiOperation(operation)
+    {
+        Summary = "Retrieves a JWT token for authentication",
+        Description = "For testing purposed only - no real authentication",
+        Tags = new List<OpenApiTag> { new() { Name = "Login" } }
+    });;
 
 
     app.MapGet("/api/companies", async ([FromServices] ICompanyRepositoryFactory factory) =>
@@ -135,7 +149,12 @@
             return Results.Ok(await repo.GetCompaniesAsync());
         }).RequireAuthorization()
         .WithName("companies")
-        .WithOpenApi();
+        .WithOpenApi(operation => new OpenApiOperation(operation)
+        {
+            Summary = "Get all the companies",
+            Description = "Fetches all the companies from the database.",
+            Tags = new List<OpenApiTag> { new() { Name = "Companies" } }
+        });
 
     app.MapGet("/api/companies/{id}", async ([FromServices] ICompanyRepositoryFactory factory, string id) =>
     {
@@ -144,7 +163,12 @@
         return company is not null ? Results.Ok(company) : Results.NotFound();
     }).RequireAuthorization()
         .WithName("company")
-        .WithOpenApi();
+        .WithOpenApi(operation => new OpenApiOperation(operation)
+        {
+            Summary = "Get a company by ID",
+            Description = "Fetches the company details for a specific ID.",
+            Tags = new List<OpenApiTag> { new() { Name = "Companies" } }
+        });
 
     app.MapGet("/api/companies/isin/{isin}", async ([FromServices] ICompanyRepositoryFactory factory, string isin) =>
         {
@@ -153,7 +177,12 @@
             return company is not null ? Results.Ok(company) : Results.NotFound();
         }).RequireAuthorization()
         .WithName("companyByIsin")
-        .WithOpenApi();
+        .WithOpenApi(operation => new OpenApiOperation(operation)
+        {
+            Summary = "Get a company by ISIN",
+            Description = "Fetches the company details for a specific ISIN.",
+            Tags = new List<OpenApiTag> { new() { Name = "Companies" } }
+        });
 
     app.MapPut("/api/companies/{id}", async (
             [FromServices] ICompanyRepositoryFactory factory,
@@ -166,7 +195,12 @@
         })
         .RequireAuthorization()
         .WithName("updateCompany")
-        .WithOpenApi();
+        .WithOpenApi(operation => new OpenApiOperation(operation)
+        {
+            Summary = "Updates a company",
+            Description = "Updates a company with a specific ID.",
+            Tags = new List<OpenApiTag> { new() { Name = "Companies" } }
+        });
 
 
     app.MapPost("/api/companies", async ([FromServices] ICompanyRepositoryFactory factory, Company input) =>
@@ -180,7 +214,12 @@
         })
         .RequireAuthorization()
         .WithName("createCompany")
-        .WithOpenApi();
+        .WithOpenApi(operation => new OpenApiOperation(operation)
+        {
+            Summary = "Creates a company",
+            Description = "Creates a company and assigns it a new ID.",
+            Tags = new List<OpenApiTag> { new() { Name = "Companies" } }
+        });
 
     app.Run();
 
