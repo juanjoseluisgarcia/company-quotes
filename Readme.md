@@ -51,6 +51,20 @@ Then we can open in a browser the web application on the URL [http://localhost](
 
 The PostgreSQL will be seeded with two scripts, one to create the database and two to create the table. For the sake of this test I did not separated a Company in multiple tables. It might have made sense to separate the field Exchange and to have a list of all exchanges. But I intended to keep this technical test simple. In a real life scenario we should have a list of exchanges. 
 
+The docker container have been seeded via two files `setup-db.sh` and `initialData.sql` 
+
+We can access postgreSQL with any desktop or web client that supports PostgreSQL like TablePlus or similar. 
+
+The parameters are:
+
+```config
+host: localhost (or the IP of the machine running Docker if it is not the one we are using)
+port: 5432
+database: companies
+user: postgres
+password: postgres
+```
+
 ### Api
 
 This solution is a .NET application as requested and since it is specifaly said that it needs to be in .NET Core /6+ I have opted to use the new minimal hosting API rather than the previous MVC approach that offers a much more streamlined approach. 
