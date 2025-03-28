@@ -72,7 +72,7 @@ This solution is a .NET application as requested and since it is specifaly said 
 
 After some careful consideration, I have opted out of `EF Core` and I have gone with `Dapper` as my main library for data access alongside `Npgsql` for PostgreSQL. Since I did not want to start writting SQL queries in the code, as some, argue is *less* maintaneable than with a full fledge ORM I have opted to also include `Dapper.FastCrud` (see this [link](https://dappertutorial.net/dapper-fastcrud) for those unfamiliar with this library) that offers a minimalistic Object to Entity approach. 
 
-#### Authentiucation
+#### Authentication
 
 Since it was asked as *nice to have* some level of authentication, and for the sake of a technical test, I have hardcoded a user and a password as well as a SHA-256 key to generate a JWT token. I did not want to over complicate this test with a full fledge OpenID Connect solution or SAML integration. I opted to keep things simple. In the UI I call the login endpoint, take the token and pass it as a bearer token to the API. In swagger I have enable Swagger authorization and the endpoint ready to generate the token, so the user can simply copy the token to the authorize section in Swagger. 
 
