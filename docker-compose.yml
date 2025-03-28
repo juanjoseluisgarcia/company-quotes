@@ -1,0 +1,33 @@
+networks:
+    glasslewis:
+        driver: bridge
+services:
+  postgres:
+    container_name: postgres
+    build:
+      context: ./api
+      dockerfile: postgres.dockerfile
+    image: glaslewis/postgress
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgress-volume:/var/lib/postgresql/data
+    networks:
+      - glasslewis
+        
+  api:
+    container_name: api
+    build:
+      context: ./api
+      dockerfile: api.dockerfile
+    image: glaslewis/api
+    ports:
+      - "3000:3000"
+    networks:
+      - glasslewis
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+volumes:
+  postgress-volume:

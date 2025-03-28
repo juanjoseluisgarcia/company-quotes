@@ -1,0 +1,86 @@
+@baseUrl = http://localhost:5198
+@token = {{login.response.body.token}}
+
+### Login
+# @name login
+POST {{baseUrl}}/api/auth/login
+Content-Type: application/json
+
+{
+    "username": "admin",
+    "password": "admin"
+}
+
+### Get all companies
+GET {{baseUrl}}/api/companies
+Authorization: Bearer {{token}}
+
+### Get company by ISIN
+GET {{baseUrl}}/api/companies/DEHRMBDC36K3
+Authorization: Bearer {{token}}
+
+### Create new company
+POST {{baseUrl}}/api/companies
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Test Company",
+    "exchange": "NYSE",
+    "ticker": "TEST",
+    "isin": "US12345678901",
+    "website": "http://www.testcompany.com"
+}
+
+### Update company
+PUT {{baseUrl}}/api/companies/DEHRMBDC36K3
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "name": "Updated Company Name",
+    "exchange": "NYSE",
+    "ticker": "TEST",
+    "isin": "DEHRMBDC36K3",
+    "website": "http://www.updatedcompany.com"
+}
+
+### Delete company
+DELETE {{baseUrl}}/api/companies/DEHRMBDC36K3
+Authorization: Bearer {{token}}
+
+### Get quotes for a company
+GET {{baseUrl}}/api/companies/DEHRMBDC36K3/quotes
+Authorization: Bearer {{token}}
+
+### Create quote for a company
+POST {{baseUrl}}/api/companies/DEHRMBDC36K3/quotes
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "price": 100.50,
+    "timestamp": "2024-03-20T10:00:00Z"
+}
+
+### Get all quotes
+GET {{baseUrl}}/api/quotes
+Authorization: Bearer {{token}}
+
+### Get quote by ID
+GET {{baseUrl}}/api/quotes/1
+Authorization: Bearer {{token}}
+
+### Update quote
+PUT {{baseUrl}}/api/quotes/1
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+    "price": 101.50,
+    "timestamp": "2024-03-20T10:01:00Z"
+}
+
+### Delete quote
+DELETE {{baseUrl}}/api/quotes/1
+Authorization: Bearer {{token}} 
